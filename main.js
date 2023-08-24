@@ -168,6 +168,28 @@ const Preview = {
         return out;
     },
 	
+	PartialDescape(html) {
+		// 按照换行符 \n 进行分割，得行数组
+	    let liness = html.split("\n");
+	    let outs = "";
+	    let inside_codes = false;
+	    for (let i = 0; i < liness.length; i += 1) {
+	        if (liness[i].startsWith("&gt;")) {
+	            liness[i] = liness[i].replace(/&gt;/g, ">");
+	        }
+			// 如果在代码内部
+	        if (inside_code) {
+	            lines[i] = lines[i].replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+	        }
+	        if (lines[i].startsWith("```")) {
+	            inside_code = !inside_code;
+	        }
+	        out += `${lines[i]}\n`;
+	    }
+	    return out;
+	},
+	
+	
 	// 按下的键是否为普通字符键，更新预览区域的显示内容（如果不是，则显示输入的Markdown文本的预览渲染效果）
     UpdateKeyPress({
         keyCode
